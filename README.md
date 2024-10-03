@@ -1,0 +1,1 @@
+# plugins-products-per-page-for-woocommerce
