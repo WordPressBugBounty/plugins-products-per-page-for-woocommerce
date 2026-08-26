@@ -2,8 +2,8 @@
 Contributors: wpcodefactory, anbinder, karzin, omardabbas
 Tags: woocommerce, products per page, ecommerce
 Requires at least: 4.4
-Tested up to: 6.8
-Stable tag: 2.5.3
+Tested up to: 7.1
+Stable tag: 2.5.6
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,7 @@ Products per page selector for WooCommerce.
 * Multiple and customizable **frontend positions** (before products, after products, custom positions, etc.).
 * Display selector anywhere on your site with the `[alg_wc_products_per_page]` **shortcode**. This is especially useful when using **visual builders**, e.g., Elementor.
 * **Template options**: template, selector class and style, before and after HTML.
+* Customizable **select options**.
 * Output selector as a **dropdown box** or as **radio buttons**.
 * Option to enable/disable **cookie**.
 * Plugin is **WPML** and **Polylang** compatible.
@@ -27,7 +28,6 @@ Products per page selector for WooCommerce.
 
 [Number of Products per Page - Pagination Manager for WooCommerce Pro](https://wpfactory.com/item/products-per-page-woocommerce/) plugin version includes:
 
-* Customizable **select options**.
 * "Products per Page" **widget**.
 
 ### &#128472; Feedback ###
@@ -50,6 +50,25 @@ Products per page selector for WooCommerce.
 1. Number of Products per Page - Pagination Manager for WooCommerce - Frontend example
 
 == Changelog ==
+
+= 2.5.6 - 21/08/2026 =
+* Dev - Advanced Options - Scopes - Functions allow-listed.
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.4).
+* Dev - WPFactory Key Manager - Library updated (to v1.1.0).
+* Tested up to: 7.1.
+
+= 2.5.5 - 12/08/2026 =
+* Dev - "Select options" option moved to the free plugin version.
+* Dev - Advanced Options - "Custom CSS" option removed.
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.2).
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.3).
+* Dev - WPFactory Key Manager - Library updated (to v1.0.9).
+* Dev - Coding standards improved.
+* WC tested up to: 11.0.
+
+= 2.5.4 - 23/05/2026 =
+* Tested up to: 7.0.
+* WC tested up to: 10.7.
 
 = 2.5.3 - 18/11/2025 =
 * Fix - Apply shortcodes early in the `template` (for the `[alg_wc_ppp_translate]` shortcode).
@@ -124,8 +143,8 @@ Products per page selector for WooCommerce.
 * WC tested up to: 6.5.
 
 = 2.1.0 - 08/02/2022 =
-* Dev - Advanced - "Scopes" options added.
-* Dev - Advanced - "Apply in WooCommerce shortcodes" option added (defaults to `yes`).
+* Dev - Advanced Options - "Scopes" options added.
+* Dev - Advanced Options - "Apply in WooCommerce shortcodes" option added (defaults to `yes`).
 * Dev - GitHub deploy script added.
 * Tested up to: 5.9.
 * WC tested up to: 6.1.

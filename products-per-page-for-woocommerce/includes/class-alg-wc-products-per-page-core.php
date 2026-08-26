@@ -2,7 +2,7 @@
 /**
  * Products per Page for WooCommerce - Core Class
  *
- * @version 2.5.3
+ * @version 2.5.6
  * @since   1.0.0
  *
  * @author  Algoritmika Ltd.
@@ -33,7 +33,7 @@ class Alg_WC_Products_Per_Page_Core {
 	/**
 	 * Constructor.
 	 *
-	 * @version 2.3.1
+	 * @version 2.5.5
 	 * @since   1.0.0
 	 *
 	 * @todo    (dev) remove `get_option( 'alg_products_per_page_position_priority', 40 )`
@@ -82,9 +82,6 @@ class Alg_WC_Products_Per_Page_Core {
 			) {
 				add_filter( 'wc_get_template', array( $this, 'replace_pagination_template' ), PHP_INT_MAX, 2 );
 			}
-
-			// Custom CSS
-			add_action( 'wp_head', array( $this, 'add_custom_css' ) );
 
 			// Shortcodes
 			add_shortcode( 'alg_wc_products_per_page', array( $this, 'form_shortcode' ) );
@@ -138,18 +135,6 @@ class Alg_WC_Products_Per_Page_Core {
 			wp_kses_allowed_html( 'post' ),
 			$allowed_html
 		);
-	}
-
-	/**
-	 * add_custom_css.
-	 *
-	 * @version 2.0.0
-	 * @since   2.0.0
-	 */
-	function add_custom_css() {
-		if ( '' !== ( $custom_css = get_option( 'alg_wc_products_per_page_custom_css', '' ) ) ) {
-			echo "<style>{$custom_css}</style>"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
 	}
 
 	/**
@@ -232,7 +217,7 @@ class Alg_WC_Products_Per_Page_Core {
 	/**
 	 * form_shortcode.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 * @since   1.5.0
 	 *
 	 * @todo    (feature) add `select_options` and `form_method` atts?
@@ -263,8 +248,8 @@ class Alg_WC_Products_Per_Page_Core {
 
 		$products_per_page_form = $this->get_products_per_page_form( array_merge( $atts, array(
 			'form_method'    => get_option( 'alg_wc_products_per_page_form_method', 'POST' ),
-			'select_options' => apply_filters(
-				'alg_wc_products_per_page_select_options',
+			'select_options' => get_option(
+				'alg_products_per_page_select_options',
 				implode( PHP_EOL, array( '10|10', '25|25', '50|50', '100|100', 'All|-1' ) )
 			),
 		) ) );
@@ -520,7 +505,7 @@ class Alg_WC_Products_Per_Page_Core {
 	/**
 	 * add_products_per_page_form.
 	 *
-	 * @version 2.5.0
+	 * @version 2.5.5
 	 * @since   1.0.0
 	 */
 	function add_products_per_page_form() {
@@ -533,7 +518,7 @@ class Alg_WC_Products_Per_Page_Core {
 			'before_html'    => wp_kses_post( get_option( 'alg_wc_products_per_page_before_html', '<div class="clearfix"></div><div>' ) ),
 			'after_html'     => wp_kses_post( get_option( 'alg_wc_products_per_page_after_html', '</div>' ) ),
 			'radio_glue'     => wp_kses_post( get_option( 'alg_wc_products_per_page_radio_glue', ' ' ) ),
-			'select_options' => esc_html( apply_filters( 'alg_wc_products_per_page_select_options',
+			'select_options' => esc_html( get_option( 'alg_products_per_page_select_options',
 				implode( PHP_EOL, array( '10|10', '25|25', '50|50', '100|100', 'All|-1' ) ) ) ),
 		) );
 		echo wp_kses(
@@ -586,19 +571,44 @@ class Alg_WC_Products_Per_Page_Core {
 	}
 
 	/**
+	 * get_scope_functions.
+	 *
+	 * @version 2.5.6
+	 * @since   2.5.6
+	 */
+	static function get_scope_functions() {
+		return array(
+			'is_product_category' => __( 'Product category', 'products-per-page-for-woocommerce' ),
+			'is_product_tag'      => __( 'Product tag', 'products-per-page-for-woocommerce' ),
+			'is_product_taxonomy' => __( 'Product taxonomy', 'products-per-page-for-woocommerce' ),
+			'is_shop'             => __( 'Shop', 'products-per-page-for-woocommerce' ),
+			'is_archive'          => __( 'Archive', 'products-per-page-for-woocommerce' ),
+			'is_home'             => __( 'Home', 'products-per-page-for-woocommerce' ),
+			'is_front_page'       => __( 'Front page', 'products-per-page-for-woocommerce' ),
+			'is_single'           => __( 'Single', 'products-per-page-for-woocommerce' ),
+			'is_singular'         => __( 'Singular', 'products-per-page-for-woocommerce' ),
+		);
+	}
+
+	/**
 	 * check_scope.
 	 *
-	 * @version 2.1.0
+	 * @version 2.5.6
 	 * @since   2.1.0
 	 */
 	function check_scope() {
-		$scopes = get_option( 'alg_wc_products_per_page_scopes', array() );
+		$scopes            = get_option( 'alg_wc_products_per_page_scopes', array() );
+		$allowed_functions = array_keys( self::get_scope_functions() );
 		foreach ( array( 'require', 'exclude' ) as $scope ) {
 			if ( ! empty( $scopes[ $scope ] ) ) {
 				foreach ( $scopes[ $scope ] as $func ) {
 					if (
+						in_array( $func, $allowed_functions, true ) &&
 						function_exists( $func ) &&
-						( ( 'require' === $scope && ! $func() ) || ( 'exclude' === $scope && $func() ) )
+						(
+							( 'require' === $scope && ! $func() ) ||
+							( 'exclude' === $scope &&   $func() )
+						)
 					) {
 						return false;
 					}
